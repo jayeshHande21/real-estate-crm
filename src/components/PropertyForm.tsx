@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Box, Paper, Typography } from "@mui/material";
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Box, Paper, Typography, SelectChangeEvent } from "@mui/material";
 
 interface Property {
   id: number;
@@ -22,7 +22,7 @@ const PropertyForm: React.FC<{ onAddProperty: (property: Property) => void }> = 
     availability: "Available",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> | SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -63,7 +63,7 @@ const PropertyForm: React.FC<{ onAddProperty: (property: Property) => void }> = 
 
         <TextField label="Size (sq ft)" name="size" type="number" value={formData.size} onChange={handleChange} required fullWidth />
         <TextField label="Location" name="location" value={formData.location} onChange={handleChange} required fullWidth />
-        <TextField label="Budget ($)" name="budget" type="number" value={formData.budget} onChange={handleChange} required fullWidth />
+        <TextField label="Budget (Rs)" name="budget" type="number" value={formData.budget} onChange={handleChange} required fullWidth />
 
         <FormControl fullWidth>
           <InputLabel>Availability</InputLabel>

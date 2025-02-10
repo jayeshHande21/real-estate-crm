@@ -9,7 +9,7 @@ interface Lead {
   id: number;
   name: string;
   phone: string;
-  documents: string[]; // Stores uploaded file names
+  documents: string[]; 
 }
 
 const Leads: React.FC = () => {
@@ -18,21 +18,19 @@ const Leads: React.FC = () => {
     { id: 2, name: "Jane Smith", phone: "9876543210", documents: [] },
     { id: 3, name: "Alice Johnson", phone: "4567891230", documents: [] },
   ]);
+  
 
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
-
   const [editLead, setEditLead] = useState<Lead | null>(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  // Open Edit Dialog
   const handleEdit = (lead: Lead) => {
     setEditLead(lead);
     setOpenEditDialog(true);
   };
 
-  // Save Edited Lead
   const handleSaveEdit = () => {
     if (editLead) {
       setLeads(leads.map(lead => lead.id === editLead.id ? editLead : lead));
@@ -40,7 +38,6 @@ const Leads: React.FC = () => {
     setOpenEditDialog(false);
   };
 
-  // Handle file upload
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, leadId: number) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -50,26 +47,25 @@ const Leads: React.FC = () => {
     }
   };
 
-  // Handle pagination
   const handlePageChange = (_: unknown, newPage: number) => setPage(newPage);
   const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  // Filter leads based on search query
   const filteredLeads = leads.filter(
     (lead) =>
       lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       lead.phone.includes(searchQuery)
   );
-
+  const addLead = (newLead: Lead) => {
+    setLeads((prevLeads) => [...prevLeads, { ...newLead, documents: newLead.documents || [] }]);
+  };
+  
   return (
     <div>
       <h1>Leads Page</h1>
-      <LeadForm />
-
-      {/* Search Bar */}
+      <LeadForm addLead={addLead} />
       <TextField
         label="Search Leads"
         variant="outlined"
@@ -78,8 +74,6 @@ const Leads: React.FC = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-
-      {/* Leads Table */}
       <Table>
         <TableHead>
           <TableRow>
@@ -118,8 +112,6 @@ const Leads: React.FC = () => {
           ))}
         </TableBody>
       </Table>
-
-      {/* Pagination Controls */}
       <TablePagination
         rowsPerPageOptions={[3, 5, 10]}
         component="div"
@@ -129,8 +121,6 @@ const Leads: React.FC = () => {
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
       />
-
-      {/* Edit Lead Dialog */}
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
         <DialogTitle>Edit Lead</DialogTitle>
         <DialogContent>
